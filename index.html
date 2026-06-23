@@ -3,48 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UnlimitedCheat Server</title>
+    <title>UnlimitedCheat</title>
     <style>
-        body {
-            background-color: #121212;
-            color: #e0e0e0;
-            font-family: sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
+        body { 
+            background: #000; 
+            color: #fff; 
+            font-family: sans-serif; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            margin: 0; 
         }
-
-        .container {
-            text-align: center;
-            padding: 20px;
-        }
-
-        .btn {
-            background-color: #333;
-            color: white;
-            border: 1px solid #555;
-            padding: 12px 24px;
-            font-size: 16px;
+        .container { text-align: center; }
+        .btn { 
+            border: 1px solid #333; 
+            color: #fff; 
+            padding: 12px 24px; 
+            text-decoration: none; 
+            display: inline-block; 
+            background: #000;
+            margin: 10px;
             cursor: pointer;
-            border-radius: 4px;
-            text-decoration: none;
-            display: inline-block;
+            font-size: 16px;
         }
-
-        .btn:hover { background-color: #444; }
+        .btn:hover { background: #111; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>UnlimitedCheat</h1>
-        <p>Mobile players- Press this button to gain immediate access to UnlimitedCheat's servers</p>
+        <p>Server Status: Online</p>
         
-        <a href="amongus://init?servername=UnlimitedCheat&serverport=443&serverip=unlimitedcheatssl.duckdns.org&usedtls=false" class="btn">
-            Connect to Server
+        <!-- Mobile Connection Trigger (Uses port 443 and HTTPS URL) -->
+        <a href="amongus://init?servername=UnlimitedCheat&serverport=443&serverip=https%3A%2F%2Funlimitedcheatssl.duckdns.org&usedtls=false" class="btn">
+            Connect (Mobile)
         </a>
+
+        <!-- PC Batch Script Download -->
+        <button onclick="downloadBatchScript()" class="btn">
+            Download PC Setup (.bat)
+        </button>
     </div>
+
+    <script>
+        function downloadBatchScript() {
+            const batchContent = `@echo off\n` +
+                `title UnlimitedCheat PC Installer\n` +
+                `echo Locating Among Us AppData folder...\n` +
+                `set "targetDir=%LocalAppData%Low\\Innersloth\\Among Us"\n\n` +
+                `if not exist "%targetDir%" (\n` +
+                `    echo Error: Among Us data folder not found. Make sure the game is installed.\n` +
+                `    pause\n` +
+                `    exit\n` +
+                `)\n\n` +
+                `echo Writing server configuration...\n` +
+                `(\n` +
+                `echo [\n` +
+                `echo   {\n` +
+                `echo     "$type": "StaticHttpRegionInfo, Assembly-CSharp",\n` +
+                `echo     "Name": "UnlimitedCheat",\n` +
+                `echo     "PingServer": "unlimitedcheatssl.duckdns.org",\n` +
+                `echo     "Servers": [\n` +
+                `echo       {\n` +
+                `echo         "Name": "http-1",\n` +
+                `echo         "Ip": "https://unlimitedcheatssl.duckdns.org",\n` +
+                `echo         "Port": 443,\n` +
+                `echo         "UseDtls": false,\n` +
+                `echo         "Players": 0,\n` +
+                `echo         "ConnectionFailures": 0\n` +
+                `echo       }\n` +
+                `echo     ],\n` +
+                `echo     "TargetServer": null,\n` +
+                `echo     "TranslateName": 1003\n` +
+                `echo   }\n` +
+                `echo ]\n` +
+                `) > "%targetDir%\\regionInfo.json"\n\n` +
+                `echo Success! UnlimitedCheat has been added to your game regions via HTTPS.\n` +
+                `echo Restart Among Us on Steam and select UnlimitedCheat from the region list.\n` +
+                `pause`;
+
+            const blob = new Blob([batchContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "InstallUnlimitedCheatPC.bat";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
 </body>
 </html>
